@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>MTG Card Search</title>
+	<link href="css/screen.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<div id="toolbar">
+		<div class="wrapper">
+			<button class="reset">Empty</button>
+			<div class="slider" id="grid-size" data-min="1" data-max="5">
+				<input type="hidden" name="grid_size" class="grid-size" value="3">
+				<span class="handle"></span>
+			</div>
+		
+			<input type="text" class="query">
+			<button class="search">Search</button>
+			<img src="images/loading.gif" class="loading">
+		</div>
+	</div>
+	
+	<div id="search-results">
+		<button class="close">Close</button>
+		<div class="results">
+			<ul></ul>
+		</div>
+	</div>
+	
+	<ul id="grid" class="clearfix"></ul>
+	
+	<script src="js/jquery.js"></script>
+	<script src="js/underscore.js"></script>
+	<script src="js/backbone.js"></script>
+	<script src="js/backbone-localstorage.js"></script>
+	<script src="js/mtginfo.js"></script>
+</body>
+</html>
