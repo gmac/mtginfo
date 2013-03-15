@@ -63,7 +63,9 @@ button.remove {
 }
 
 #toolbar input,
-#toolbar button {
+#toolbar button,
+#toolbar select,
+#toolbar label {
 	vertical-align: middle;
 }
 
@@ -83,40 +85,14 @@ button.remove {
 }
 
 .reset,
-.slider {
+.grid-size {
 	float: right;
 }
 
-.slider {
-	background: #0e0e0e; /* Old browsers */
-	background: -moz-linear-gradient(top,  #0e0e0e 0%, #7d7e7d 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0e0e0e), color-stop(100%,#7d7e7d)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #0e0e0e 0%,#7d7e7d 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #0e0e0e 0%,#7d7e7d 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #0e0e0e 0%,#7d7e7d 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #0e0e0e 0%,#7d7e7d 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0e0e0e', endColorstr='#7d7e7d',GradientType=0 ); /* IE6-9 */
-	border: 1px solid #000;
-	border-left: 0;
-	border-right: 0;
-	border-radius: 6px;
-	height: 10px;
-	margin: 6px 25px;
-	position: relative;
-	width: 150px;
-}
-
-.slider .handle {
-	background-color: #fff;
-	border: 1px solid #999;
-	border-radius: 50%;
-	cursor: default;
-	display: block;
-	height: 14px;
-	position: absolute;
-	top: -3px;
-	width: 14px;
-	z-index: 1;
+.grid-size {
+	color: #cecece;
+	font-size: 12px;
+	margin-right: 15px;
 }
 
 /* Grid
@@ -136,6 +112,7 @@ button.remove {
 #search-results .close {
 	background-color: rgba(0,0,0,0.75);
 	border: none;
+	border-radius: 4px;
 	color: #fff;
 	padding: 10px;
 	position: absolute;
@@ -146,6 +123,21 @@ button.remove {
 	overflow: auto;
 }
 
+#search-results .add {
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 6px;
+	color: #fff;
+	display: none;
+	font-size: 55px;
+	height: 75px;
+	line-height: 75px;
+	left: 118px;
+	position: absolute;
+	text-align: center;
+	top: 185px;
+	width: 75px;
+}
+
 #search-results ul {
 	list-style: none;
 	margin: 0;
@@ -153,12 +145,24 @@ button.remove {
 }
 
 #search-results li {
-	margin: 15px 10px;
-	position: relative;
+	margin: 15px 18px;
 }
 
-#search-results li:hover .add {
-	display: inline;
+#search-results a {
+	border: 1px solid #000;
+	display: block;
+	height: 445px;
+	position: relative;
+	width: 312px;
+}
+
+#search-results a:focus {
+	border: 1px solid #b5bdc8;
+	outline: none;
+}
+
+#search-results a:focus .add {
+	display: block;
 }
 
 /* Grid
@@ -187,4 +191,8 @@ button.remove {
 
 #grid li:hover .remove {
 	display: inline;
+}
+
+.card img {
+	opacity: 0.2;
 }

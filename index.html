@@ -8,11 +8,16 @@
 	<div id="toolbar">
 		<div class="wrapper">
 			<button class="reset">Empty</button>
-			<div class="slider" id="grid-size" data-min="1" data-max="5">
-				<input type="hidden" name="grid_size" class="grid-size" value="3">
-				<span class="handle"></span>
+			
+			<div class="grid-size">
+				<label for="grid-size">Grid Size:</label>
+				<select id="grid-size">
+					<option value="1">Small</option>
+					<option value="2">Medium</option>
+					<option value="3">Large</option>
+				</select>
 			</div>
-		
+			
 			<input type="text" class="query">
 			<button class="search">Search</button>
 			<img src="images/loading.gif" class="loading">
@@ -22,11 +27,33 @@
 	<div id="search-results">
 		<button class="close">Close</button>
 		<div class="results">
-			<ul></ul>
+			<ul>
+				<li class="card" data-id="<%= id %>">
+					<a href="#" title="<%= name %>">
+						<img src="" alt="<%= name %>">
+						<span class="add">+</span>
+					</a>
+				</li>
+			</ul>
 		</div>
 	</div>
 	
 	<ul id="grid" class="clearfix"></ul>
+	
+	<script type="text/template" id="search-item-tmpl">
+		<li class="card" data-id="<%= id %>">
+			<a href="<%= url %>" title="<%= name %>">
+				<img src="<%= image %>" alt="<%= name %>">
+				<span class="add">+</span>
+			</a>
+		</li>
+	</script>
+	<script type="text/template" id="grid-item-tmpl">
+		<li class="card" data-id="<%= id %>">
+			<img src="<%= image %>" alt="<%= name %>">
+			<button class="remove">x</button>
+		</li>
+	</script>
 	
 	<script src="js/jquery.js"></script>
 	<script src="js/underscore.js"></script>
