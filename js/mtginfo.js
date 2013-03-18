@@ -107,7 +107,7 @@
 		},
 	
 		keypress: function( evt ) {
-			if ( evt.keyCode == 13 ) {
+			if ( evt.keyCode == 13 && this.$query.val() ) {
 				evt.preventDefault();
 				this.search();
 			}
@@ -141,7 +141,9 @@
 			
 			this.$results = this.$( ".results" );
 			this.$list = this.$( "ul" );
-			this.$win = $( window ).on("resize", _.bind(this.setHeight, this));
+			this.$win = $( window )
+				.on("resize", _.bind(this.setHeight, this));
+			$(document).on("keydown", _.bind(this.keydown, this));
 			this.setHeight();
 		},
 	
@@ -159,7 +161,7 @@
 				}, this);
 
 				this.$list.html( html );
-				this.$list.find( "li:first-child a" ).focus();
+				this.selectIndex( 0 );
 				this.toggle( true );
 			
 			} else if ( searchModel.length ) {
@@ -186,37 +188,69 @@
 				}
 			});
 		},
-	
+		
+		selectIndex: function( index, scrollto ) {
+			if ( index >= 0 && index < searchModel.length ) {
+				var top = this.$results.scrollTop();
+				var to = this.$results.find("li:eq("+index+") .card").focus();
+				this.selectedIndex = index;
+				this.$results.scrollTop( top );
+				
+				if ( scrollto ) {
+					this.$results.scrollTo( to, 500 );
+				}
+			}
+		},
+		
+		// Shifts the list focus up and down:
+		shiftIndex: function( dir ) {
+			this.selectIndex( this.selectedIndex+dir, true );
+		},
+		
+		// Specifies if the panel is current open/active:
+		isOpen: function() {
+			return this.left > this.minX;
+		},
+		
 		// Sets the height of the search results toolbar:
 		// only updates when left is not set, or when results bar is visible.
 		setHeight: function() {
-			if ( !this.left || this.left > this.minX ) {
+			if ( !this.left || this.isOpen() ) {
 				this.$results.height( this.$win.height()-this.bufferTop );
 			}
 		},
 	
 		events: {
-			"focus": "stopEvent",
 			"mouseover .card": "focus",
+			"mousedown .card": "add",
 			"click .card": "add",
 			"click .close": "toggle"
 		},
 		
-		stopEvent: function( evt ) {
-			evt.preventDefault();
-		},
-		
 		// Focuses the anchor tag within the event target:
 		focus: function( evt ) {
-			$( evt.target ).closest( ".card" ).find( "a" ).focus();
+			var target = $( evt.target ).closest("li");
+			this.selectIndex( target.index() );
 		},
 		
 		// Adds the event target's associated card to the grid:
 		add: function( evt ) {
-			var target = $( evt.target ).closest( ".card" );
-			var model = searchModel.get( target.attr("data-id") );
+			evt.preventDefault();
+			var model = searchModel.at( this.selectedIndex );
 			gridItems.create( model.toJSON(), {at: 0} );
 			this.toggle( false );
+		},
+		
+		// Triggered in response to keydown:
+		// event is captured in the WINDOW scope, not locally.
+		keydown: function( evt ) {
+			if ( this.isOpen() ) {
+				switch ( evt.which ) {
+					case 38: evt.preventDefault(); return this.shiftIndex( -1 );
+					case 40: evt.preventDefault(); return this.shiftIndex( 1 );
+					case 13: evt.preventDefault(); return this.add();
+				}
+			}
 		}
 	});
 

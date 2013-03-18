@@ -41,8 +41,8 @@
 	<ul id="grid" class="clearfix"></ul>
 	
 	<script type="text/template" id="search-item-tmpl">
-		<li class="card" data-id="<%= id %>">
-			<a href="<%= url %>" title="<%= name %>">
+		<li>
+			<a href="<%= url %>" title="<%= name %>" data-id="<%= id %>" class="card">
 				<img src="<%= image %>" alt="<%= name %>">
 				<span class="add">+</span>
 			</a>
@@ -56,6 +56,7 @@
 	</script>
 	
 	<script src="js/jquery.js"></script>
+	<script src="js/jquery.scrollto.js"></script>
 	<script src="js/underscore.js"></script>
 	<script src="js/backbone.js"></script>
 	<script src="js/backbone-localstorage.js"></script>
