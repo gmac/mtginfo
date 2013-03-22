@@ -95,7 +95,7 @@ button.remove {
 	margin-right: 15px;
 }
 
-/* Grid
+/* Search Results
 ------------------------- */
 #search-results {
 	background-color: #000;
@@ -145,23 +145,21 @@ button.remove {
 }
 
 #search-results li {
-	margin: 15px 18px;
-}
-
-#search-results a {
-	border: 1px solid #000;
-	display: block;
+	border: 2px solid #000;
+	border-radius: 8px;
 	height: 445px;
+	margin: 15px 18px;
+	overflow: hidden;
 	position: relative;
 	width: 312px;
 }
 
-#search-results a:focus {
-	border: 1px solid #b5bdc8;
+#search-results li.active {
+	border: 2px solid #88b9d9;
 	outline: none;
 }
 
-#search-results a:focus .add {
+#search-results li.active .add {
 	display: block;
 }
 

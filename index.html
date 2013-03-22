@@ -27,22 +27,15 @@
 	<div id="search-results">
 		<button class="close">Close</button>
 		<div class="results">
-			<ul>
-				<li class="card" data-id="<%= id %>">
-					<a href="#" title="<%= name %>">
-						<img src="" alt="<%= name %>">
-						<span class="add">+</span>
-					</a>
-				</li>
-			</ul>
+			<ul></ul>
 		</div>
 	</div>
 	
 	<ul id="grid" class="clearfix"></ul>
 	
 	<script type="text/template" id="search-item-tmpl">
-		<li>
-			<a href="<%= url %>" title="<%= name %>" data-id="<%= id %>" class="card">
+		<li class="card" data-id="<%= id %>">
+			<a href="<%= url %>" title="<%= name %>">
 				<img src="<%= image %>" alt="<%= name %>">
 				<span class="add">+</span>
 			</a>

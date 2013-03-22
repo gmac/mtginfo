@@ -89,8 +89,20 @@
 			this.$query = this.$( ".query" );
 			this.$loader = this.$( ".loading" );
 			this.$size = this.$( "#grid-size" ).val( gridSettings.get("gridSize") );
+			this.startSearch();
 		},
-	
+		
+		searching: function() {
+			return this.$query.is( ":focus" );
+		},
+		
+		startSearch: function( evt ) {
+			if ( !this.searching() ) {
+				this.$query.val( "" ).focus();
+				evt && evt.preventDefault();
+			}
+		},
+		
 		render: function() {
 			this.$loader.hide();
 		},
@@ -101,7 +113,7 @@
 			"click .search": "search",
 			"click .reset": "reset",
 		},
-	
+		
 		gridSize: function() {
 			gridSettings.save( {gridSize: this.$size.val()} );
 		},
@@ -116,7 +128,7 @@
 		search: function() {
 			this.$loader.show();
 			searchModel.fetch( this.$query.val() );
-			this.$query.val( "" );
+			this.$query.val( "" ).blur();
 		},
 
 		reset: function() {
@@ -141,9 +153,7 @@
 			
 			this.$results = this.$( ".results" );
 			this.$list = this.$( "ul" );
-			this.$win = $( window )
-				.on("resize", _.bind(this.setHeight, this));
-			$(document).on("keydown", _.bind(this.keydown, this));
+			this.$win = $( window ).on("resize", _.bind(this.setHeight, this));
 			this.setHeight();
 		},
 	
@@ -189,15 +199,19 @@
 			});
 		},
 		
+		// Selects a card at the specified index:
 		selectIndex: function( index, scrollto ) {
 			if ( index >= 0 && index < searchModel.length ) {
-				var top = this.$results.scrollTop();
-				var to = this.$results.find("li:eq("+index+") .card").focus();
+				var to = this.$results
+					.find("li")
+					.removeClass("active")
+					.filter(":eq("+index+")")
+					.addClass("active");
+					
 				this.selectedIndex = index;
-				this.$results.scrollTop( top );
-				
+
 				if ( scrollto ) {
-					this.$results.scrollTo( to, 500 );
+					this.$results.scrollTo( to, 500, {offset:{top:-10, left:0}});
 				}
 			}
 		},
@@ -221,21 +235,20 @@
 		},
 	
 		events: {
-			"mouseover .card": "focus",
-			"mousedown .card": "add",
+			"mouseover .card": "hover",
 			"click .card": "add",
 			"click .close": "toggle"
 		},
 		
 		// Focuses the anchor tag within the event target:
-		focus: function( evt ) {
+		hover: function( evt ) {
 			var target = $( evt.target ).closest("li");
 			this.selectIndex( target.index() );
 		},
 		
 		// Adds the event target's associated card to the grid:
 		add: function( evt ) {
-			evt.preventDefault();
+			evt && evt.preventDefault();
 			var model = searchModel.at( this.selectedIndex );
 			gridItems.create( model.toJSON(), {at: 0} );
 			this.toggle( false );
@@ -246,6 +259,7 @@
 		keydown: function( evt ) {
 			if ( this.isOpen() ) {
 				switch ( evt.which ) {
+					case 27: evt.preventDefault(); return this.toggle( false );
 					case 38: evt.preventDefault(); return this.shiftIndex( -1 );
 					case 40: evt.preventDefault(); return this.shiftIndex( 1 );
 					case 13: evt.preventDefault(); return this.add();
@@ -316,11 +330,23 @@
 			gridItems.get(card.attr("data-id")).destroy();
 		}
 	});
-
 	
 	// View instances:
 	var toolsView = new ToolbarView();
 	var resultsView = new SearchResultsView();
 	var gridView =  new GridView();
+	
+	
+	// Keyboard controller:
+	$(window).on("keydown", function( evt ) {
+		if ( !toolsView.searching() ) {
+			if ( evt.which == 83 ) {
+				toolsView.startSearch( evt ); // "S" key
+			} else {
+				resultsView.keydown( evt );
+			}
+		}
+	});
+	
 	
 }).call(this);
