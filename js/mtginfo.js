@@ -101,14 +101,29 @@
 	// -----------------------
 	var ToolbarView = Backbone.View.extend({
 		el: "#toolbar",
-	
+		
+		events: {
+			"change #grid-size": "gridSize",
+			"click .reset": "reset",
+			"click .search": "search",
+			"keydown .query": "keypress",
+			"focus .query": "startSearch"
+		},
+		
 		initialize: function() {
 			this.$query = this.$( ".query" );
 			this.$loader = this.$( ".loading" );
+			this.$mssg = this.$( ".message" ).hide().css("visibility", "visible");
 			this.$size = this.$( "#grid-size" );
 			
 			this.listenTo( searchModel, "reset", this.render, this );
 			this.listenTo( gridSettings, "change", this.render, this );
+			this.listenTo( MTGInfo, "message", this.setMessage, this );
+		},
+		
+		render: function() {
+			this.$loader.hide();
+			this.$size.val( gridSettings.get("gridSize").toString() );
 		},
 		
 		isSearching: function() {
@@ -123,17 +138,8 @@
 			}
 		},
 		
-		render: function() {
-			this.$loader.hide();
-			this.$size.val( gridSettings.get("gridSize").toString() );
-		},
-	
-		events: {
-			"change #grid-size": "gridSize",
-			"click .reset": "reset",
-			"click .search": "search",
-			"keydown .query": "keypress",
-			"focus .query": "startSearch"
+		setMessage: function( message ) {
+			this.$mssg.text( message ).show().delay( 2000 ).fadeOut();
 		},
 		
 		gridSize: function() {
@@ -149,6 +155,7 @@
 	
 		search: function() {
 			this.$loader.show();
+			this.$mssg.hide();
 			searchModel.fetch( this.$query.val() );
 			this.$query.val( "" ).blur();
 		},
@@ -203,6 +210,7 @@
 			} else {
 				// No results:
 				this.toggle( false );
+				MTGInfo.trigger( "message", "No results found." );
 			}
 		},
 	
@@ -278,16 +286,21 @@
 		// Triggered in response to keydown:
 		// event is captured in the WINDOW scope, not locally.
 		keydown: function( evt ) {
+			var handled = false;
+			
 			if ( this.isActive() ) {
-				evt.preventDefault();
+				handled = true;
 				
 				switch ( evt.which ) {
-					case 27: return this.toggle( false );
-					case 38: return this.shiftIndex( -1 );
-					case 40: return this.shiftIndex( 1 );
-					case 13: return this.add();
+					case 27: this.toggle( false ); break;
+					case 38: this.shiftIndex( -1 ); break;
+					case 40: this.shiftIndex( 1 ); break;
+					case 13: this.add(); break;
+					default: handled = false;
 				}
 			}
+			
+			return handled;
 		}
 	});
 
@@ -413,7 +426,7 @@
 		},
 		
 		keydown: function( evt ) {
-			evt.preventDefault();
+			var handled = true;
 			
 			if ( evt.which >= 49 && evt.which <= 57 ) {
 				
@@ -433,7 +446,7 @@
 				}
 				
 				this.shiftSelectionBy( x, y );
-			
+				
 			} else if ( evt.which == 8 ) {
 				
 				// Delete key
@@ -443,7 +456,12 @@
 
 				// Enter key
 				this.openIndex( this.selectedIndex );
-			}	
+				
+			} else {
+				handled = false;
+			}
+			
+			return handled;
 		}
 	});
 	
@@ -456,25 +474,31 @@
 	// Keyboard controller:
 	$(window).on("keydown", function( evt ) {
 		//console.log( evt.which );
+		var handled = false;
 		
 		if ( evt.which == 27 ) { // "ESC"
 			resultsView.toggle( false );
+			handled = true;
 		}
 		else if ( !toolsView.isSearching() ) {
 			
 			if ( evt.which == 191 ) { // "?" key
 				toolsView.startSearch( evt );
+				handled = true;
 				
 			} else if ( evt.which == 71 ) { // "G" key
 				gridSettings.toggleGridSize();
+				handled = true;
 				
 			} else  if ( resultsView.isActive() ) {
-				resultsView.keydown( evt );
+				handled = resultsView.keydown( evt );
 				
 			} else {
-				gridView.keydown( evt );
+				handled = gridView.keydown( evt );
 			}
-			
+		}
+		
+		if ( handled ) {
 			evt.preventDefault();
 		}
 	});

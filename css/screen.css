@@ -85,6 +85,16 @@ button.remove {
 	top: 3px;
 }
 
+.message {
+	background-color: rgba(0,0,0,0.3);
+	border-radius: 6px;
+	color: #fff;
+	display: inline-block;
+	margin: 0 15px;
+	padding: 0 10px;
+	visibility: hidden;
+}
+
 .grid-controls {
 	color: #cecece;
 	font-size: 12px;
