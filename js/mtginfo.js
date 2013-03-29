@@ -64,9 +64,10 @@
 		defaults: {
 			gridSize: 3
 		},
-	
-		initialize: function() {
-			this.fetch();
+
+		toggleGridSize: function() {
+			var size = this.get( "gridSize" );
+			this.save( "gridSize", size < 3 ? size+1 : 1 );
 		}
 	});
 
@@ -78,44 +79,65 @@
 
 
 	// Views:
-
+	
+	// MTGInfo Application
+	// -------------------
+	var MTGInfo = _.extend({
+		
+		// Top buffer height reserved for toolbar:
+		bufferTop: $("#toolbar").height(),
+		
+		// Startup function to launch the app:
+		start: function() {
+			gridSettings.fetch();
+			gridItems.fetch();
+			toolsView.startSearch();
+		}
+		
+	}, Backbone.Events);
+	
+	
 	// Toolbar View Controller
 	// -----------------------
 	var ToolbarView = Backbone.View.extend({
 		el: "#toolbar",
 	
 		initialize: function() {
-			this.listenTo( searchModel, "reset", this.render, this );
 			this.$query = this.$( ".query" );
 			this.$loader = this.$( ".loading" );
-			this.$size = this.$( "#grid-size" ).val( gridSettings.get("gridSize") );
-			this.startSearch();
+			this.$size = this.$( "#grid-size" );
+			
+			this.listenTo( searchModel, "reset", this.render, this );
+			this.listenTo( gridSettings, "change", this.render, this );
 		},
 		
-		searching: function() {
+		isSearching: function() {
 			return this.$query.is( ":focus" );
 		},
 		
 		startSearch: function( evt ) {
-			if ( !this.searching() ) {
+			if ( !this.isSearching() ) {
 				this.$query.val( "" ).focus();
+				MTGInfo.trigger( "search" );
 				evt && evt.preventDefault();
 			}
 		},
 		
 		render: function() {
 			this.$loader.hide();
+			this.$size.val( gridSettings.get("gridSize").toString() );
 		},
 	
 		events: {
 			"change #grid-size": "gridSize",
-			"keydown .query": "keypress",
-			"click .search": "search",
 			"click .reset": "reset",
+			"click .search": "search",
+			"keydown .query": "keypress",
+			"focus .query": "startSearch"
 		},
 		
 		gridSize: function() {
-			gridSettings.save( {gridSize: this.$size.val()} );
+			gridSettings.save( "gridSize", this.$size.val() );
 		},
 	
 		keypress: function( evt ) {
@@ -148,8 +170,7 @@
 		
 			// Init view:
 			this.minX = parseInt( this.$el.css("left"), 10 );
-			this.bufferTop = $("#toolbar").height();
-			this.$el.css("padding-top", this.bufferTop).show();
+			this.$el.css("padding-top", MTGInfo.bufferTop).show();
 			
 			this.$results = this.$( ".results" );
 			this.$list = this.$( "ul" );
@@ -222,15 +243,15 @@
 		},
 		
 		// Specifies if the panel is current open/active:
-		isOpen: function() {
+		isActive: function() {
 			return this.left > this.minX;
 		},
 		
 		// Sets the height of the search results toolbar:
 		// only updates when left is not set, or when results bar is visible.
 		setHeight: function() {
-			if ( !this.left || this.isOpen() ) {
-				this.$results.height( this.$win.height()-this.bufferTop );
+			if ( !this.left || this.isActive() ) {
+				this.$results.height( this.$win.height()-MTGInfo.bufferTop );
 			}
 		},
 	
@@ -257,12 +278,14 @@
 		// Triggered in response to keydown:
 		// event is captured in the WINDOW scope, not locally.
 		keydown: function( evt ) {
-			if ( this.isOpen() ) {
+			if ( this.isActive() ) {
+				evt.preventDefault();
+				
 				switch ( evt.which ) {
-					case 27: evt.preventDefault(); return this.toggle( false );
-					case 38: evt.preventDefault(); return this.shiftIndex( -1 );
-					case 40: evt.preventDefault(); return this.shiftIndex( 1 );
-					case 13: evt.preventDefault(); return this.add();
+					case 27: return this.toggle( false );
+					case 38: return this.shiftIndex( -1 );
+					case 40: return this.shiftIndex( 1 );
+					case 13: return this.add();
 				}
 			}
 		}
@@ -273,16 +296,19 @@
 	// --------------------
 	var GridView = Backbone.View.extend({
 		el: "#grid",
-	
+		
+		rows: 0,
+		cols: 0,
+		selectedIndex: -1,
+		
 		initialize: function() {
 			var self = this;
 			this.listenTo( gridSettings, "change:gridSize", this.resetGrid, this );
 			this.listenTo( gridItems, "add remove reset", this.render, this );
+			this.listenTo( MTGInfo, "search", this.clearSelection, this );
 			this.$win = $( window ).on("resize", _.throttle(function() {
 				self.resetGrid();
 			}, 100));
-		
-			gridItems.fetch();
 		},
 	
 		render: function() {
@@ -295,8 +321,60 @@
 		
 			this.$el.html( html );
 			this.resetGrid();
+			this.selectAtIndex( 0 );
 		},
-	
+		
+		clearSelection: function() {
+			this.selectAtIndex( -1 );
+		},
+		
+		selectAtIndex: function( index ) {
+			var children = this.$el.children().removeClass( "active" );
+			index = Math.max(-1, Math.min(index, gridItems.length-1));
+			
+			if ( index >= 0 ) {
+				var target = children.eq( index ).addClass( "active" );
+				$.scrollTo( target, 500, {offset:{top:-MTGInfo.bufferTop-10, left:0}});
+			}
+
+			this.selectedIndex = index;
+		},
+		
+		removeAtIndex: function( index ) {
+			gridItems.at( index ).destroy();
+		},
+		
+		openIndex: function( index ) {
+			if ( index >= 0 && index < gridItems.length ) {
+				var model = gridItems.at( index );
+				open( model.get("url"), "_blank" );
+			}
+		},
+		
+		removeSelected: function() {
+			if ( this.selectedIndex >= 0 ) {
+				this.removeAtIndex( this.selectedIndex );
+				this.selectAtIndex( this.selectedIndex );
+			}
+		},
+		
+		setSelectionAt: function( index ) {
+			var offset = this.$win.scrollTop() + MTGInfo.bufferTop;
+			var height = this.$el.find(":first-child").outerHeight();
+			var rows = Math.round( offset / height );
+			this.selectAtIndex( this.cols * rows + index );
+		},
+		
+		shiftSelectionBy: function( x, y ) {
+			var index = this.selectedIndex;
+			
+			if ( index >= 0 ) {
+				index += (x + y * this.cols);
+				index = Math.max(0, Math.min(index, gridItems.length-1));
+				this.selectAtIndex( index );
+			}
+		},
+		
 		resetGrid: function() {
 			// Constant grid settings:
 			var baseW = 312;
@@ -311,14 +389,18 @@
 		
 			// Calculate new column width percentage:
 			// allows 1% margin added for each column.
-			var perc = Math.floor( (100-cols) / cols );
+			var perc = Math.floor( (100-cols) / cols ) - 1;
 		
 			// Apply new column styles:
 			this.$el.children().css({
 				marginLeft: "1%",
 				marginTop: "1%",
-				width: (perc-1)+"%"
+				width: perc +"%"
 			});
+			
+			// Update grid metrics:
+			this.rows = Math.floor( gridItems.length / cols );
+			this.cols = cols;
 		},
 	
 		events: {
@@ -327,7 +409,41 @@
 
 		onRemove: function( evt ) {
 			var card = $( evt.target ).closest(".card");
-			gridItems.get(card.attr("data-id")).destroy();
+			this.removeAtIndex( card.index() );
+		},
+		
+		keydown: function( evt ) {
+			evt.preventDefault();
+			
+			if ( evt.which >= 49 && evt.which <= 57 ) {
+				
+				// "1-9" keys
+				this.setSelectionAt( evt.which-49 );
+				
+			} else if ( evt.which >= 37 && evt.which <= 40 ) {
+				
+				// Arrow keys
+				var x = 0, y = 0;
+				
+				switch ( evt.which ) {
+					case 37: x = -1; break;
+					case 38: y = -1; break;
+					case 39: x = 1; break;
+					case 40: y = 1; break;
+				}
+				
+				this.shiftSelectionBy( x, y );
+			
+			} else if ( evt.which == 8 ) {
+				
+				// Delete key
+				this.removeSelected();
+				
+			} else if ( evt.which == 13 ) {
+
+				// Enter key
+				this.openIndex( this.selectedIndex );
+			}	
 		}
 	});
 	
@@ -335,16 +451,31 @@
 	var toolsView = new ToolbarView();
 	var resultsView = new SearchResultsView();
 	var gridView =  new GridView();
-	
+	MTGInfo.start();
 	
 	// Keyboard controller:
 	$(window).on("keydown", function( evt ) {
-		if ( !toolsView.searching() ) {
-			if ( evt.which == 83 ) {
-				toolsView.startSearch( evt ); // "S" key
-			} else {
+		//console.log( evt.which );
+		
+		if ( evt.which == 27 ) { // "ESC"
+			resultsView.toggle( false );
+		}
+		else if ( !toolsView.isSearching() ) {
+			
+			if ( evt.which == 191 ) { // "?" key
+				toolsView.startSearch( evt );
+				
+			} else if ( evt.which == 71 ) { // "G" key
+				gridSettings.toggleGridSize();
+				
+			} else  if ( resultsView.isActive() ) {
 				resultsView.keydown( evt );
+				
+			} else {
+				gridView.keydown( evt );
 			}
+			
+			evt.preventDefault();
 		}
 	});
 	

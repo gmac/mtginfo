@@ -7,15 +7,16 @@
 <body>
 	<div id="toolbar">
 		<div class="wrapper">
-			<button class="reset">Empty</button>
 			
-			<div class="grid-size">
-				<label for="grid-size">Grid Size:</label>
+			<div class="grid-controls">
+				<label for="grid-size"><u>G</u>rid Size:</label>
 				<select id="grid-size">
 					<option value="1">Small</option>
 					<option value="2">Medium</option>
 					<option value="3">Large</option>
 				</select>
+				
+				<button class="reset">Empty</button>
 			</div>
 			
 			<input type="text" class="query">
@@ -42,7 +43,7 @@
 		</li>
 	</script>
 	<script type="text/template" id="grid-item-tmpl">
-		<li class="card" data-id="<%= id %>">
+		<li class="card" data-id="<%= id %>" data-url="<%= url %>">
 			<img src="<%= image %>" alt="<%= name %>">
 			<button class="remove">x</button>
 		</li>

@@ -51,6 +51,7 @@ button.remove {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#28343b',GradientType=0 ); /* IE6-9 */
 	border-bottom: 1px solid #000;
 	left: 0;
+	line-height: 30px;
 	margin: 0;
 	position: fixed;
 	top: 0;
@@ -72,7 +73,7 @@ button.remove {
 #toolbar input {
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	font: 14px Arial, Helvetica, sans-serif;
+	font: bold 16px Arial, Helvetica, sans-serif;
 	margin: 0 10px 0 0;
 	padding: 5px 10px;
 	width: 200px;
@@ -84,15 +85,15 @@ button.remove {
 	top: 3px;
 }
 
-.reset,
-.grid-size {
-	float: right;
-}
-
-.grid-size {
+.grid-controls {
 	color: #cecece;
 	font-size: 12px;
+	float: right;
 	margin-right: 15px;
+}
+
+.reset {
+	margin-left: 20px;
 }
 
 /* Search Results
@@ -123,7 +124,32 @@ button.remove {
 	overflow: auto;
 }
 
-#search-results .add {
+#search-results ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#search-results li {
+	height: 445px;
+	margin: 15px 18px;
+	width: 312px;
+}
+
+/* Card UI
+------------------------- */
+.card {
+	border: 2px solid #000;
+	border-radius: 8px;
+	overflow: hidden;
+	position: relative;
+}
+
+.card.active {
+	border: 2px solid #88b9d9;
+}
+
+.add {
 	background-color: rgba(0,0,0,0.5);
 	border-radius: 6px;
 	color: #fff;
@@ -138,28 +164,7 @@ button.remove {
 	width: 75px;
 }
 
-#search-results ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-#search-results li {
-	border: 2px solid #000;
-	border-radius: 8px;
-	height: 445px;
-	margin: 15px 18px;
-	overflow: hidden;
-	position: relative;
-	width: 312px;
-}
-
-#search-results li.active {
-	border: 2px solid #88b9d9;
-	outline: none;
-}
-
-#search-results li.active .add {
+.active .add {
 	display: block;
 }
 
@@ -174,7 +179,6 @@ button.remove {
 }
 
 #grid li {
-	border: 1px solid #333;
 	float: left;
 	margin: 20px 0 0 20px;
 	max-width: 312px;
