@@ -1,0 +1,9 @@
+{
+	"name": "mtginfo",
+	"version": "0.1",
+	"author": "Greg MacWilliam",
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-requirejs": "~0.3.5"
+	}
+}

@@ -50,7 +50,7 @@
 		</li>
 	</script>
 	
-	<script src="js/mtginfo.js"></script>
-	<script>require(["main"])</script>
+	<script>var require = {urlArgs: "bust="+(new Date()).getTime()}</script>
+	<script src="js/lib/require.js" data-main="js/main"></script>
 </body>
 </html>
