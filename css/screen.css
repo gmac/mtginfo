@@ -92,7 +92,6 @@ button.remove {
 	display: inline-block;
 	margin: 0 15px;
 	padding: 0 10px;
-	visibility: hidden;
 }
 
 .grid-controls {

@@ -22,7 +22,7 @@
 			<input type="text" class="query">
 			<button class="search">Search</button>
 			<img src="images/loading.gif" class="loading">
-			<div class="message"></div>
+			<div class="message" style="display:none;">No results found.</div>
 		</div>
 	</div>
 	
@@ -50,11 +50,7 @@
 		</li>
 	</script>
 	
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.scrollto.js"></script>
-	<script src="js/underscore.js"></script>
-	<script src="js/backbone.js"></script>
-	<script src="js/backbone-localstorage.js"></script>
-	<script src="js/mtginfo.js"></script>
+	<script>var require = {urlArgs: "bust="+(new Date()).getTime()}</script>
+	<script src="js/lib/require.js" data-main="js/main"></script>
 </body>
 </html>
