@@ -259,8 +259,12 @@ ul {
 ------------------------- */
 #info {
 	background-color: #fff;
-	padding: 10px 25px;
+	padding: 25px;
 	width: 500px;
+}
+
+#info h1 {
+	margin-top: 0;
 }
 
 #info .hotkeys b {

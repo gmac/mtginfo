@@ -126,7 +126,8 @@ define([
 		},
 		
 		// Adds the event target's associated card to the grid:
-		add: function() {
+		add: function( evt ) {
+			evt && evt.preventDefault();
 			var model = searchModel.at( layout.selectedIndex() );
 			gridModel.addCard( model.toJSON() );
 			this.toggle( false );
