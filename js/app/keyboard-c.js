@@ -40,6 +40,8 @@ define([
 		var isDouble = doubleTap.test( which );
 		var handled = true;
 		
+		//console.log( which );
+		
 		if ( which == 27 ) { // "ESC" (close results)
 			searchView.toggle( false );
 			
@@ -52,6 +54,9 @@ define([
 		} else if ( which == 71 ) { // "G" key (grid size)
 			settingsModel.toggleGridSize();
 		
+		} else if ( which == 73 ) { // "I" key (info)
+			toolbarView.openInfo();
+				
 		} else if ( searchView.isActive() ) {
 			handled = searchView.keypress( which, isDouble );
 			

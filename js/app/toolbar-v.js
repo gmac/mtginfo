@@ -2,7 +2,7 @@
 // Manages behaviors of the top toolbar, including search input, grid size, and reset.
 
 define([
-	"jquery",
+	"jquery.colorbox",
 	"underscore",
 	"backbone",
 	"./search-m",
@@ -18,6 +18,7 @@ define([
 			"change #grid-size": "gridSize",
 			"click .reset": "reset",
 			"click .search": "search",
+			"click .info": "openInfo",
 			"focus .query": "startSearch"
 		},
 		
@@ -84,6 +85,15 @@ define([
 		// Resets the application by emptying cards cache:
 		reset: function() {
 			gridModel.empty();
+		},
+		
+		// Opens the info panel:
+		openInfo: function() {
+			if ( !$("#info").is(":visible") ) {
+				$.colorbox({ inline: true, href: "#info" });
+			} else {
+				$.colorbox.close();
+			}
 		}
 	});
 	

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>MTG Card Search</title>
+	<title>MtG Battlefield</title>
+	<link href="css/colorbox.css" rel="stylesheet" media="screen">
 	<link href="css/screen.css" rel="stylesheet" media="screen">
 </head>
 <body>
@@ -9,7 +10,7 @@
 		<div class="wrapper">
 			
 			<div class="grid-controls">
-				<label for="grid-size"><u>G</u>rid Size:</label>
+				<label for="grid-size">Grid Size:</label>
 				<select id="grid-size">
 					<option value="1">Small</option>
 					<option value="2">Medium</option>
@@ -17,9 +18,10 @@
 				</select>
 				
 				<button class="reset">Empty</button>
+				<button class="info">i</button>
 			</div>
 			
-			<input type="text" class="query" placeholder="Search for cards...">
+			<input type="text" class="query" placeholder="Search for a card...">
 			<button class="search">Search</button>
 			<img src="images/loading.gif" class="loading">
 			<div class="message" style="display:none;">No results found.</div>
@@ -34,7 +36,26 @@
 	</div>
 	
 	<ul id="grid" class="clearfix"></ul>
-
+	
+	
+	<div style="display:none;">
+		<div id="info">
+			<h1>MtG Battlefield</h1>
+			<p>Designed to help track your game. All content from <a href="http://magiccards.info">magiccards.info</a>.</p>
+			<p><b>Keyboard commands:</b></p>
+			<ul class="hotkeys">
+				<li><b>?</b> : Focus the search box.</li>
+				<li><b>G</b> : Toggle the grid size.</li>
+				<li><b>I</b> : Toggle information panel.</li>
+				<li><b>ESC</b> : Close the search results pane / info panel.</li>
+				<li><b>1-9</b> : Select a card in the visible grid; double tap to launch.</li>
+				<li><b>Arrows</b> : Step through search results and the cards grid.</li>
+				<li><b>Enter&nbsp;</b> : Add a search result, or launch selected grid card.</li>
+				<li><b>Delete</b> : Remove selected grid card.</li>
+			</ul>
+		</div>
+	</div>
+	
 	<script type="text/template" id="search-item-tmpl">
 		<li class="card" data-id="<%= id %>">
 			<a href="<%= url %>" title="<%= name %>">

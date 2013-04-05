@@ -25,7 +25,7 @@ html[xmlns] .clearfix {
 ------------------------- */
 body {
 	background: #000 url(../images/tile-dk.png) repeat;
-	font: 14px Arial, Helvetica, sans-serif;
+	font: 14px/1.5em Arial, Helvetica, sans-serif;
 	margin: 0;
 	width: 100%;
 }
@@ -36,6 +36,15 @@ button.remove {
 	position: absolute;
 	right: 5px;
 	top: 5px;
+}
+
+a {
+	color: #828c95;
+}
+
+ul {
+	margin: 0;
+	padding: 0 0 0 15px;
 }
 
 /* Toolbar
@@ -79,6 +88,24 @@ button.remove {
 	width: 200px;
 }
 
+#toolbar input::-webkit-input-placeholder {
+    color: #ccc;
+	font-weight: normal;
+}
+#toolbar input:-moz-placeholder {
+    color: #ccc;
+	font-weight: normal;
+}
+#toolbar input::-moz-placeholder {
+    color: #ccc;
+	font-weight: normal;
+}
+#toolbar input:-ms-input-placeholder {
+    color: #ccc;
+	font-weight: normal;
+}
+
+
 #toolbar .loading {
 	display: none;
 	position: relative;
@@ -98,11 +125,26 @@ button.remove {
 	color: #cecece;
 	font-size: 12px;
 	float: right;
-	margin-right: 15px;
 }
 
 .reset {
-	margin-left: 20px;
+	margin: 0 20px;
+	margin-right: 10px;
+}
+
+.info {
+	background-color: rgba(0,0,0,0.3);
+	border: none;
+	border-radius: 50%;
+	color: #828c95;
+	cursor: pointer;
+	font-family: Times, serif;
+	font-size: 15px;
+	font-weight: bold;
+	height: 16px;
+	line-height: 16px;
+	text-align: center;
+	width: 16px;
 }
 
 /* Search Results
@@ -124,6 +166,7 @@ button.remove {
 	border: none;
 	border-radius: 4px;
 	color: #fff;
+	cursor: pointer;
 	padding: 10px;
 	position: absolute;
 	z-index: 10;
@@ -210,6 +253,19 @@ button.remove {
 	padding: 40px 0;
 	margin: 0 25px !important;
 	width: auto !important;
+}
+
+/* Info window
+------------------------- */
+#info {
+	background-color: #fff;
+	padding: 10px 25px;
+	width: 500px;
+}
+
+#info .hotkeys b {
+	font-family: Consolas, 'Lucida Console', monospace;
+	font-weight: bold;
 }
 
 .card img {
