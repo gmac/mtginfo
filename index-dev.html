@@ -19,7 +19,7 @@
 				<button class="reset">Empty</button>
 			</div>
 			
-			<input type="text" class="query">
+			<input type="text" class="query" placeholder="Search for cards...">
 			<button class="search">Search</button>
 			<img src="images/loading.gif" class="loading">
 			<div class="message" style="display:none;">No results found.</div>
@@ -34,7 +34,7 @@
 	</div>
 	
 	<ul id="grid" class="clearfix"></ul>
-	
+
 	<script type="text/template" id="search-item-tmpl">
 		<li class="card" data-id="<%= id %>">
 			<a href="<%= url %>" title="<%= name %>">

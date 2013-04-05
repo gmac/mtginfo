@@ -1,7 +1,14 @@
 {
 	"name": "mtginfo",
-	"version": "0.1",
-	"author": "Greg MacWilliam",
+	"description": "magiccards.info quick-search app",
+	"version": "0.1.0",
+	"author": "Greg MacWilliam <greg.macwilliam@threespot.com>",
+	"license": "MIT",
+	"dependencies": {
+		"jquery": ">=1.7.0",
+	    "underscore": ">=1.4.3",
+	    "backbone": ">=0.9.9"
+	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-requirejs": "~0.3.5"

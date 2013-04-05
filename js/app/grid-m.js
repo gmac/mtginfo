@@ -8,8 +8,13 @@ define([
 		
 		id: "mtginfo-grid",
 		
-		addCard: function( json ) {
-			this.add( json, {at: 0} );
+		addCard: function( model ) {
+			// Remove any existing instance of the card:
+			var current = this.get( model.id );
+			if ( current ) this.remove( current, {silent:true} );
+			
+			// Add new instance at the front of the grid queue.
+			this.unshift( model );
 			this.save();
 		},
 		

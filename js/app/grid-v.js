@@ -34,17 +34,18 @@ define([
 			gridModel.each(function( model ) {
 				html += this.tmpl( model.toJSON() );
 			}, this);
-		
+			
 			this.$el.html( html );
 			this.resetGrid();
 			this.selectIndex( 0 );
 		},
 		
 		// Called by the main application keyboard router:
-		keypress: function( which ) {
+		keypress: function( which, doubleTap ) {
 			
 			if ( which >= 49 && which <= 57 ) { // "1-9" keys
-				this.selectVisibleIndex( which-49 );
+				if ( doubleTap ) this.openSelected();
+				else this.selectVisibleIndex( which-49 );
 				return true;
 				
 			} else if ( which >= 37 && which <= 40 ) { // Arrow keys

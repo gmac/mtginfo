@@ -11,17 +11,40 @@ define([
 	"./grid-v"
 ], function( $, settingsModel, toolbarView, searchView, gridView ) {
 	
+	// Double-tap timer control:
+	var doubleTap = (function() {
+		var timer;
+		var storedKey;
+		
+		function reset() {
+			storedKey = null;
+		}
+
+		return {
+			test: function( key ) {
+				var prev = storedKey;
+				storedKey = key;
+				
+				clearTimeout( timer );
+				timer = setTimeout( reset, 200 );
+				
+				return (prev == key);
+			}
+		};
+	}());
+	
 	// Keyboard controller:
 	$(window).on("keydown", function( evt ) {
 		
 		var which = evt.which;
+		var isDouble = doubleTap.test( which );
 		var handled = true;
 		
 		if ( which == 27 ) { // "ESC" (close results)
 			searchView.toggle( false );
 			
 		} else if ( toolbarView.isSearching() ) {
-			handled = toolbarView.keypress( which );
+			handled = toolbarView.keypress( which, isDouble );
 			
 		} else if ( which == 191 ) { // "?" key (search)
 			toolbarView.startSearch( which );
@@ -30,10 +53,10 @@ define([
 			settingsModel.toggleGridSize();
 		
 		} else if ( searchView.isActive() ) {
-			handled = searchView.keypress( which );
+			handled = searchView.keypress( which, isDouble );
 			
 		} else {
-			handled = gridView.keypress( which );
+			handled = gridView.keypress( which, isDouble );
 		}
 
 		if ( handled ) {
