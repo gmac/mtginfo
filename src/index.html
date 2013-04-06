@@ -37,21 +37,22 @@
 	
 	<ul id="grid" class="clearfix"></ul>
 	
+	
 	<div style="display:none;">
 		<div id="info">
 			<h1>MtG Battlefield</h1>
-			<p>Designed to help track your game. All content from <a href="http://magiccards.info">magiccards.info</a>.</p>
-			<p><b>Keyboard commands:</b></p>
+			<p><b>Keyboard controls:</b></p>
 			<ul class="hotkeys">
-				<li><b>?</b> : Focus the search box.</li>
-				<li><b>G</b> : Toggle the grid size.</li>
+				<li><b>?</b> : Focus search box.</li>
+				<li><b>G</b> : Toggle grid size.</li>
 				<li><b>I</b> : Toggle information panel.</li>
-				<li><b>ESC</b> : Close the search results pane / info panel.</li>
+				<li><b>ESC</b> : Close search results pane / information panel.</li>
 				<li><b>1-9</b> : Select a card in the visible grid; double tap to launch.</li>
-				<li><b>Arrows</b> : Step through search results and the cards grid.</li>
+				<li><b>Arrows</b> : Step through search results and card grid.</li>
 				<li><b>Enter&nbsp;</b> : Add a search result, or launch selected grid card.</li>
 				<li><b>Delete</b> : Remove selected grid card.</li>
 			</ul>
+			<p class="about">All content from <a href="http://magiccards.info">magiccards.info</a>. This application is open source on <a href="https://github.com/gmac/mtginfo">GitHub</a>.</p>
 		</div>
 	</div>
 	
@@ -70,7 +71,10 @@
 		</li>
 	</script>
 	
-	<script src="js/mtginfo.js"></script>
-	<script>require(["main"])</script>
+	<!--require-->
+	<script>var require = {urlArgs: "bust="+(new Date()).getTime()}</script>
+	<script src="js/lib/require.js" data-main="js/main"></script>
+	<!--/require-->
+	
 </body>
 </html>

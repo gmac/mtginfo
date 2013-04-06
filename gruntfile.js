@@ -1,20 +1,34 @@
 module.exports = function( grunt ) {
 
 	grunt.initConfig({
-		//pkg: grunt.file.readJSON('package.json'),
+		
 		requirejs: {
-			compile: {
+			dist: {
 				options: {
 					almond: true,
+					modules: [{name: 'main'}],
+					dir: "dist",
+					appDir: "src",
 					baseUrl: "js",
-					include: ["main"],
-					mainConfigFile: "js/main.js",
-					out: "js/mtginfo.js"
+					mainConfigFile: "src/js/main.js"
 				}
 			}
+		},
+		
+		replace: {
+			dist: {
+				src: ['dist/index.html'],
+				dest: 'dist/index.html',
+				replacements: [{
+					from: /<!--require-->[\s\S]+?<!--\/require-->/g,
+					to: '<script src="js/main.js"></script><script>require(["main"]);</script>'
+				}]
+			}
 		}
+		
 	});
 	
 	grunt.loadNpmTasks("grunt-requirejs");
-	grunt.registerTask("default", ["requirejs"]);
+	grunt.loadNpmTasks("grunt-text-replace");
+	grunt.registerTask("default", ["requirejs", "replace"]);
 };

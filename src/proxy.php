@@ -1,0 +1,1 @@
+<? echo file_get_contents( 'http://magiccards.info/query?q='.$_GET['q'] ); ?>
