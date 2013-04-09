@@ -1,0 +1,1 @@
+define(["jquery","underscore","backbone"],function(e,t,n){var r;return t.extend({top:e("#toolbar").height(),left:function(e){this.trigger("left",e)},select:function(e){this.deselect(),r=e.addClass("active")},deselect:function(){r&&(r.removeClass("active"),r=null)},selectedIndex:function(){return r?r.index():-1}},n.Events)});
