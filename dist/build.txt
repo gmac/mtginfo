@@ -9,7 +9,7 @@ css/screen.css
 
 js/main.js
 ----------------
-/Users/greg/MAMP/mtginfo/node_modules/grunt-requirejs/node_modules/almond/almond.js
+/Users/gmacwilliam/Desktop/ActiveProjects/mtginfo/node_modules/grunt-requirejs/node_modules/almond/almond.js
 js/lib/jquery.js
 js/lib/underscore.js
 js/lib/backbone.js
