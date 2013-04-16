@@ -7,21 +7,13 @@ define([
 	// Search results model:
 	var SearchModel = Backbone.Collection.extend({
 		url: "proxy.php",
-	
+		
 		// Override Backbone-native fetch:
 		// Uses custom AJAX to load from local proxy.
 		fetch: function( query ) {
-			var self = this;
-		
-			$.ajax({
-				url: "proxy.php",
-				dataType: "text",
-				data: {
-					q: escape(query)
-				},
-				success: function( res ) {
-					self.reset( self.parse(res) );
-				}
+			Backbone.Collection.prototype.fetch.call(this, {
+				data: {q: escape(query)},
+				dataType: "text"
 			});
 		},
 	
